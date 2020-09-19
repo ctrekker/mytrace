@@ -21,25 +21,25 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.pre('save', function(next) {
-  if(!this.isModified('password')) {
+UserSchema.pre('save', function (next) {
+  if (!this.isModified('password')) {
     return next();
   }
   this.password = Bcrypt.hashSync(this.password, 10);
   next();
 });
-UserSchema.methods.comparePassword = function(plaintext) {
+UserSchema.methods.comparePassword = function (plaintext) {
   return new Promise((resolve, reject) => {
     resolve(Bcrypt.compareSync(plaintext, this.password));
   });
 };
-UserSchema.methods.toJSON = function() {
+UserSchema.methods.toJSON = function () {
   let obj = this.toObject();
   delete obj.password;
   return obj;
 };
 
 UserSchema.plugin(timestamp);
-UserSchema.index({ email: 1 });
+UserSchema.index({email: 1});
 
 module.exports = mongoose.model('User', UserSchema);
