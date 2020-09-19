@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter, Switch, Route} from "react-router-dom";
 import Home from "./views/Home";
 import Data from "./views/Data";
+import 'antd/dist/antd.css';
 
 function App() {
   return (
