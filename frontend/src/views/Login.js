@@ -1,26 +1,18 @@
 import React from 'react'
+import 'antd/dist/antd.css';
 
 import { Form, Input, Button, Checkbox } from 'antd';
-import { Layout, Menu, Row, Col, Divider } from 'antd';
-const { Header, Footer, Sider, Content } = Layout;
-
-
+import { Layout, Menu } from 'antd';
+import Navigation from "../components/Navigation";
+const { Header, Footer, Content } = Layout;
 
 
 function Login(props) {
         return (
-        <Layout>
-            <Header>
-                <div className="logo" />
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-
-                </Menu>
-            </Header>
-            <Content>
-
-                <Row>
-                    <Col span ={8}></Col>
-                    <Col span ={8}>
+        <Layout style={{ height: '100vh' }}>
+            <Navigation>
+                <Content style={{padding: '0 50px'}}>
+                    <div style={{display: "flex", height: '80%', alignItems: 'center', justifyContent: 'center' }}>
                         <Form
                             name="basic"
                             initialValues={{ remember: true }}
@@ -45,19 +37,19 @@ function Login(props) {
                                 <Checkbox>Remember me</Checkbox>
                             </Form.Item>
 
-                            <Form.Item>
+                            <Form.Item style={{ textAlign: 'right' }}>
                                 <Button type="primary" htmlType="submit">
                                     Submit
                                 </Button>
                             </Form.Item>
                         </Form>
-                    </Col>
-                    <Col span ={8}></Col>
-                </Row>
+                    </div>
+                </Content>
+            </Navigation>
 
-            </Content>
 
-            <Footer style = {{textAlign: 'center'}}>Created by David</Footer>
+
+            <Footer style = {{textAlign: 'center'}}>Bitwise Boys 2020</Footer>
         </Layout>
     );
 }
