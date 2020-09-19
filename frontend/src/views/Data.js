@@ -1,4 +1,5 @@
 import React, {PureComponent, useState} from 'react';
+import {Layout, Menu, DatePicker, Space, Modal, Button, Checkbox} from 'antd';
 
 import moment from 'moment-es6';
 
@@ -7,6 +8,8 @@ import{LineChart, XAxis, YAxis, CartesianGrid, Line, Legend, Tooltip} from "rech
 import Navigation from "../components/Navigation";
 import Recommendations from "../components/Recommendations";
 import{DownOutlined} from '@ant-design/icons'
+
+import Recommendations from "../components/Recommendations";
 
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -30,8 +33,11 @@ function Data(props) {
     const [regionalData, setRegionalData] = useState(false);
     const [globalData, setGlobalData] = useState(false);
 
+
     const [startDate, setStartDate] = useState(moment().subtract(1, 'month'));
     const [endDate, setEndDate] = useState(moment());
+
+    console.log(personalData);
 
 
     function onChange(e) {
