@@ -27,6 +27,14 @@ const MetricEntrySchema = new mongoose.Schema({
   }
 });
 
+// MetricEntrySchema.pre('save', function(next) {
+//   if(!this.isModified('password')) {
+//     return next();
+//   }
+//   this.password = Bcrypt.hashSync(this.password, 10);
+//   next();
+// });
+
 MetricEntrySchema.index({ user: 1, source: 1, metricTimestamp: 1 });
 MetricEntrySchema.plugin(timestamp);
 

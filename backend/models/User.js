@@ -21,8 +21,6 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.plugin(timestamp);
-
 UserSchema.pre('save', function(next) {
   if(!this.isModified('password')) {
     return next();
@@ -42,5 +40,6 @@ UserSchema.methods.toJSON = function() {
 };
 
 UserSchema.plugin(timestamp);
+UserSchema.index({ email: 1 });
 
 module.exports = mongoose.model('User', UserSchema);

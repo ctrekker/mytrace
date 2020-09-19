@@ -16,6 +16,8 @@ function requireAuth(req, res, next) {
       error(res);
     }
     
+    req.user = user;
+    
     next();
   });
 }
