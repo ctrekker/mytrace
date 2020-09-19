@@ -1,48 +1,25 @@
 import React from 'react';
-import Navigation from '../components/Navigation';
-import {Row, Col} from 'antd';
-import {
-  PieChart, Pie, Sector, Cell,
-} from 'recharts';
+import {Layout, Menu, DatePicker, Space} from 'antd';
+import{LineChart, XAxis, YAxis, CartesianGrid, Line, Legend, Tooltip} from "recharts";
+import Navigation from "../components/Navigation";
 
-const data = [
-  { name: 'Electricity', value: 300 },
-  { name: 'Natural Gas', value: 300 },
-  { name: 'Transportation / Gas', value: 200 },
-];
-const COLORS = ['#00C49F', '#FFBB28', '#FF8042'];
+const { Header, Footer, Sider, Content } = Layout;
+const{RangePicker} = DatePicker;
+
 
 function Data(props) {
     return (
-      <Navigation>
-        <Row>
-          <Col span={8}>
-          
-          </Col>
-          <Col span={8}>
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', top: '-200px' }}>
-              <PieChart width={600} height={600}>
-                <Pie
-                  data={data}
-                  cx={300}
-                  cy={300}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={(entry) => entry.name}
-                >
-                  {
-                    data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
-                  }
-                </Pie>
-              </PieChart>
-            </div>
-          </Col>
-          <Col span={8}>
-          
-          </Col>
-        </Row>
-      </Navigation>
+        <Navigation>
+            <Content>
+                <Space direction = "vertical" size={12}>
+                    <RangePicker />
+                </Space>
+                <LineChart width={500} height={300} margin={{top:5, right:30, left:20, bottom:5}}>
+                    <XAxis/>
+                    <YAxis/>
+                </LineChart>
+            </Content>
+        </Navigation>
     )
 }
 
