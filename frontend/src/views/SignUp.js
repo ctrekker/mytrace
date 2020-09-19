@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Input, Layout, Button, Typography } from 'antd';
 import {Link} from "react-router-dom";
-import DataEntry from "../components/DataEntry";
 import Config from '../Config';
 
-const {Header, Content, Footer} = Layout;
+const { Content, Footer} = Layout;
 
 function SignUp(props){
     const [error, setError] = useState('');
