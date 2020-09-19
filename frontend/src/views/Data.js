@@ -2,10 +2,11 @@ import React, {PureComponent, useState} from 'react';
 
 import moment from 'moment-es6';
 
-import {Layout, Menu, DatePicker, Space, Modal, Button, Checkbox} from 'antd';
+import {Layout, Menu, DatePicker, Space, Modal, Button, Checkbox, Dropdown} from 'antd';
 import{LineChart, XAxis, YAxis, CartesianGrid, Line, Legend, Tooltip} from "recharts";
 import Navigation from "../components/Navigation";
 import Recommendations from "../components/Recommendations";
+import{DownOutlined} from '@ant-design/icons'
 
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -22,6 +23,18 @@ const data = [
     },
 
 ];
+const menu = (
+    <Menu>
+        <Menu.Item key="0">
+            <a>Daily</a>
+        </Menu.Item>
+        <Menu.Item key="1">
+            <a>Weekly</a>
+        </Menu.Item>
+        <Menu.Item key="2">Monthly</Menu.Item>
+        <Menu.Item key="3">Yearly</Menu.Item>
+    </Menu>
+);
 
 
 
@@ -32,6 +45,7 @@ function Data(props) {
 
     const [startDate, setStartDate] = useState(moment().subtract(1, 'month'));
     const [endDate, setEndDate] = useState(moment());
+
 
     function onChange(e) {
         console.log(`checked = ${e.target.checked}`)
@@ -56,6 +70,11 @@ function Data(props) {
                     <Content>
                         <Space direction = "vertical" size={12}>
                             <RangePicker onChange={onRangeChange}/>
+                            <Dropdown overlay={menu} trigger={['click']}>
+                                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                                    Time Options <DownOutlined />
+                                </a>
+                            </Dropdown>
                         </Space>
                         <LineChart width={800} height={500} data={data} margin={{top:5, right:30, left:20, bottom:5}}>
                             <CartesianGrid strokeDasharray = "3 3"/>
