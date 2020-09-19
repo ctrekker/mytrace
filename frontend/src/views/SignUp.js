@@ -1,6 +1,7 @@
 import React from "react";
 import {Form, Input, Layout, Button} from "antd";
 import {Link} from "react-router-dom";
+import DataEntry from "../components/DataEntry";
 
 const {Header, Content, Footer} = Layout;
 
@@ -81,6 +82,7 @@ function signUp(props){
             </Content>
             <Footer style={{background: "#999", textAlign:"center"}}>
                 <p>Already have an account: <Link to={"/signIn"}>Sign In</Link></p>
+                <DataEntry/>
             </Footer>
         </Layout>
     );
