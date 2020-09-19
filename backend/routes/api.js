@@ -5,6 +5,6 @@ const usersRouter = require('./users');
 const metricsRouter = require('./metrics');
 
 router.use('/users', usersRouter);
-router.use('/metricEntry', metricsRouter);
+router.use('/metrics', metricsRouter);
 
 module.exports = router;

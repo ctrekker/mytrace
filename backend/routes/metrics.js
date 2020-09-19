@@ -41,4 +41,21 @@ router.put('/', requireAuth, async (req, res) => {
   );
 });
 
+
+router.get('/aggregate', requireAuth, async (req, res) => {
+  res.json(
+    await MetricEntry.collection.aggregate([
+      {
+        $match: {source: req.query.source, user: req.user._id}
+      },
+      {
+        $group: {
+          _id: req.query.source,
+          total: {$sum: "$data"}
+        }
+      }
+    ])
+  );
+});
+
 module.exports = router;
