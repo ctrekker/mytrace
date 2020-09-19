@@ -27,13 +27,17 @@ const MetricEntrySchema = new mongoose.Schema({
   }
 });
 
-// MetricEntrySchema.pre('save', function(next) {
-//   if(!this.isModified('password')) {
-//     return next();
-//   }
-//   this.password = Bcrypt.hashSync(this.password, 10);
-//   next();
-// });
+MetricEntrySchema.pre('save', function(next) {
+  const conversions = {
+    ELECTRICITY: 1.5588,
+    NATURAL_GAS: 12.1033638,
+    TRANSPORTATION: 19.59
+  };
+
+  this.carbonImpact = conversions[this.source] * this.data;
+
+  next();
+});
 
 MetricEntrySchema.index({ user: 1, source: 1, metricTimestamp: 1 });
 MetricEntrySchema.plugin(timestamp);
