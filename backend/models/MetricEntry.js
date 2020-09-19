@@ -27,9 +27,9 @@ const MetricEntrySchema = new mongoose.Schema({
   }
 });
 
-MetricEntrySchema.pre('save', function(next) {
+MetricEntrySchema.pre('save', function (next) {
   const conversions = {
-    ELECTRICITY: 1.5588,
+    ELECTRIC: 1.5588,
     NATURAL_GAS: 12.1033638,
     TRANSPORTATION: 19.59
   };

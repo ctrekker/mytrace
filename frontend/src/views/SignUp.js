@@ -10,7 +10,7 @@ function SignUp(props){
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-  
+
     async function signUp() {
       try {
         const user = await Config.sendRequest('/api/users', 'POST', {name, email, password});
@@ -24,7 +24,7 @@ function SignUp(props){
         setError(e.message);
       }
     }
-  
+
     return (
         <Layout className="layout" style={{display:"flex", flexFlow:"column", height:"100vh"}}>
             <Content style={{ position: 'relative' }}>
@@ -42,7 +42,7 @@ function SignUp(props){
                             >
                                 <Input value={name} onChange={e => setName(e.target.value)}/>
                             </Form.Item>
-                          
+
                             <Form.Item
                                 name="email"
                                 label="Email"

@@ -41,7 +41,7 @@ router.post('/', requireAuth, async (req, res) => {
       data: JSON.parse(req.body.data || '{}'),
       metricTimestamp: req.body.metricTimestamp ? new Date(parseInt(req.body.metricTimestamp)) : undefined
     })
-  )
+  );
 });
 
 router.put('/', requireAuth, async (req, res) => {
@@ -86,20 +86,31 @@ router.get('/aggregate', requireAuth, async (req, res) => {
 router.get('/emissions', requireAuth, async (req, res) => {
 
   //add to req
-  const pipeline = [
+  req.pipeline = [
     {
-      $match: { user: req.user._id, }
+      $match: {user: req.user._id}
+    },
+    {
+      $project: {
+        carbonImpact: 1,
+        metricTimestamp: 1,
+        dateField: { $dateToString: { format: (req.query.group || '').toLowerCase() === 'year' ? '%Y' : '%Y-%m', date: '$metricTimestamp'} }
+      }
     },
     {
       $group: {
-        _id: req.user._id,
-        totalEmissions: { $sum: "$carbonImpact" },
+        _id: '$dateField',
+        totalEmissions: {$sum: "$carbonImpact"},
         first: {$min: "$metricTimestamp"},
         last: {$max: "$metricTimestamp"}
       }
+    },
+    {
+      $sort: {
+        _id: 1
+      }
     }
   ];
-  req.pipeline = pipeline;
   aggregation(req, res)
 
 });
@@ -138,20 +149,21 @@ async function aggregation(req, res){
     if (startDate === undefined && interval !== 'ALL') {
       res.status(400).send('A start date must be included');
     }
-    const daysInInterval = moment(aggregate[0].last).diff(moment(aggregate[0].first), 'days');
-    const intervalUnits = {
-      'DAY': 1,
-      'WEEK': 7,
-      'MONTH': 30.5,
-      'YEAR': 365
-    };
-
-    let trueInterval = daysInInterval / intervalUnits[interval];
-    if(trueInterval === 0){
-      trueInterval = 1;
-    }
 
     for (let aggregateGroup of aggregate) {
+      const daysInInterval = moment(aggregateGroup.last).diff(moment(aggregateGroup.first), 'days');
+      const intervalUnits = {
+        'DAY': 1,
+        'WEEK': 7,
+        'MONTH': 30,
+        'YEAR': 365
+      };
+  
+      let trueInterval = daysInInterval / intervalUnits[interval];
+      if(trueInterval === 0){
+        trueInterval = 1;
+      }
+      
       aggregateGroup.totalEmissions /= trueInterval;
     }
 
