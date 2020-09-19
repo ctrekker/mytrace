@@ -9,13 +9,17 @@ router.get('/', requireAuth, (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  res.json(
-    await User.create({
+  try {
+    const user = await User.create({
       name: req.body.name,
       email: req.body.email,
       password: req.body.password
-    })
-  );
+    });
+    res.json(user);
+  }
+  catch(e) {
+    res.status(400).json({ error: true, message: 'A user with that email already exists' });
+  }
 });
 
 router.put('/', requireAuth, async (req, res) => {
@@ -47,13 +51,19 @@ router.post('/signIn', async (req, res) => {
   const user = await User.findOne({email}).select('+password').exec();
   if (!user) {
     res.status(400).send('User with that email does not exist');
+    return;
   }
   if (!(await user.comparePassword(password))) {
     res.status(400).send('User password is incorrect');
+    return;
   }
   
   res.cookie('token', jwt.sign(user.toJSON(), process.env.JWT_SECRET));
   res.json(user);
 });
+
+router.post('/signOut', async (req, res) => {
+  res.clearCookie('token').status(200).json({ message: 'Goodbye!' });
+})
 
 module.exports = router;
