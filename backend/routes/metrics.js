@@ -4,12 +4,20 @@ const {requireAuth} = require('../security');
 const MetricEntry = require('../models/MetricEntry');
 
 router.get('/', requireAuth, async (req, res) => {
+  if (!'ELECTRIC|NATURAL_GAS|TRANSPORTATION'.split('|').includes(req.body.source) && req.body.source) {
+    res.status(400).send('Must be ELECTRIC|NATURAL_GAS|TRANSPORTATION');
+    return;
+  }
+
   const startDate = parseInt(req.query.startDate);
   const endDate = parseInt(req.query.endDate);
   const limit = parseInt(req.query.limit || '100');
-  
+  const source = req.query.source || {$in: ['ELECTRIC', 'NATURAL_GAS', 'TRANSPORTATION']};
+
   res.json(
     await MetricEntry.find({
+      user: req.user._id,
+      source: source,
       metricTimestamp: {
         $lt: endDate,
         $gt: startDate
@@ -23,6 +31,7 @@ router.post('/', requireAuth, async (req, res) => {
     res.status(400).send('Must be ELECTRIC|NATURAL_GAS|TRANSPORTATION');
     return;
   }
+
   res.json(
     await MetricEntry.create({
       user: req.user._id,
@@ -42,20 +51,11 @@ router.put('/', requireAuth, async (req, res) => {
 });
 
 
-router.get('/aggregate', requireAuth, async (req, res) => {
+router.get('/test', requireAuth, async (req, res) => {
   res.json(
-    await MetricEntry.collection.aggregate([
-      {
-        $match: {source: req.query.source, user: req.user._id}
-      },
-      {
-        $group: {
-          _id: req.query.source,
-          total: {$sum: "$data"}
-        }
-      }
-    ])
-  );
+    await MetricEntry
+      .aggregate([{$match: {source: req.query.source, user: req.user._id}}])
+  )
 });
 
 module.exports = router;
