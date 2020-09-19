@@ -5,6 +5,7 @@ import {BrowserRouter, Switch, Route} from "react-router-dom";
 import Home from "./views/Home";
 import Data from "./views/Data";
 import Login from "./views/Login";
+import SignUp from "./views/SignUp";
 import 'antd/dist/antd.css';
 
 function App() {
@@ -16,6 +17,9 @@ function App() {
           </Route>
           <Route path={'/data'} exact>
             <Data/>
+          </Route>
+          <Route path={'/signup'} exact>
+              <SignUp/>
           </Route>
             <Route path={'/login'} exact>
                 <Login/>
