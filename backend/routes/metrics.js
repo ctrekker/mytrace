@@ -61,23 +61,6 @@ router.put('/', requireAuth, async (req, res) => {
 
 
 router.get('/aggregate', requireAuth, async (req, res) => {
-  let startDate;
-  let endDate;
-  const metricTimestamp = {};
-  if (req.query.startDate) {
-    startDate = parseInt(req.query.startDate);
-    metricTimestamp.$gt = new Date(startDate);
-  }
-  if (req.query.endDate) {
-    endDate = parseInt(req.query.endDate);
-    metricTimestamp.$lt = new Date(endDate);
-  } else {
-    endDate = Date.now();
-  }
-
-  const mode = (req.query.mode || 'sum').toUpperCase(); // SUM, AVG
-  const interval = (req.query.interval || 'monthly').toUpperCase(); // DAY, WEEK, MONTH, YEAR, ALL
-
   const pipeline = [
     {
       $match: {
@@ -94,42 +77,34 @@ router.get('/aggregate', requireAuth, async (req, res) => {
     }
   ];
 
-  if (Object.keys(metricTimestamp).length > 0) {
-    pipeline[0].$match.metricTimestamp = metricTimestamp;
-  }
+  req.pipeline = pipeline;
+  aggregation(req, res)
 
-  const aggregate = await MetricEntry.aggregate(pipeline);
-  if (mode === 'SUM') {
-    res.json(
-      aggregate
-    );
-  } else if (mode === 'AVG') {
-    if (startDate === undefined && interval !== 'ALL') {
-      res.status(400).send('A start date must be included');
-    }
-    const daysInInterval = moment(aggregate[0].last).diff(moment(aggregate[0].first), 'days');
-    const intervalUnits = {
-      'DAY': 1,
-      'WEEK': 7,
-      'MONTH': 30.5,
-      'YEAR': 365
-    };
-
-    let trueInterval = daysInInterval / intervalUnits[interval];
-    if(trueInterval === 0){
-      trueInterval = 1;
-    }
-
-    for (let aggregateGroup of aggregate) {
-      aggregateGroup.total /= trueInterval;
-    }
-
-    res.json(aggregate);
-  }
 });
 
 
 router.get('/emissions', requireAuth, async (req, res) => {
+
+  //add to req
+  const pipeline = [
+    {
+      $match: { user: req.user._id, }
+    },
+    {
+      $group: {
+        _id: req.user._id,
+        totalEmissions: { $sum: "$carbonImpact" },
+        first: {$min: "$metricTimestamp"},
+        last: {$max: "$metricTimestamp"}
+      }
+    }
+  ];
+  req.pipeline = pipeline;
+  aggregation(req, res)
+
+});
+
+async function aggregation(req, res){
   let startDate;
   let endDate;
   const metricTimestamp = {};
@@ -147,20 +122,8 @@ router.get('/emissions', requireAuth, async (req, res) => {
   const mode = (req.query.mode || 'sum').toUpperCase(); // SUM, AVG
   const interval = (req.query.interval || 'all').toUpperCase(); // DAY, WEEK, MONTH, YEAR, ALL
 
-  const pipeline = [
-    {
-      $match: { user: req.user._id, }
-    },
-    {
-      $group: {
-        _id: req.user._id,
-        totalEmissions: { $sum: "$carbonImpact" },
-        first: {$min: "$metricTimestamp"},
-        last: {$max: "$metricTimestamp"}
-      }
-    }
-  ];
-
+  //pipeline definition
+  let pipeline = req.pipeline;
   if (Object.keys(metricTimestamp).length > 0) {
     pipeline[0].$match.metricTimestamp = metricTimestamp;
   }
@@ -183,7 +146,6 @@ router.get('/emissions', requireAuth, async (req, res) => {
       'YEAR': 365
     };
 
-
     let trueInterval = daysInInterval / intervalUnits[interval];
     if(trueInterval === 0){
       trueInterval = 1;
@@ -196,6 +158,6 @@ router.get('/emissions', requireAuth, async (req, res) => {
     res.json(aggregate);
   }
 
-});
+}
 
 module.exports = router;
