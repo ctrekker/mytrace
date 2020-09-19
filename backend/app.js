@@ -12,7 +12,8 @@ mongoose.connect(process.env.MONGO_URI)
     console.log('Database connection successful')
   })
   .catch(err => {
-    console.error('Database connection error')
+    console.error('Database connection error');
+    console.log(err);
   });
 
 const indexRouter = require('./routes/index');
