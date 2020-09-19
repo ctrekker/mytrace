@@ -1,21 +1,49 @@
-import React from "react";
-import {Form, Input, Layout, Button} from "antd";
+import React, { useState } from 'react';
+import { Form, Input, Layout, Button, Typography } from 'antd';
 import {Link} from "react-router-dom";
 import DataEntry from "../components/DataEntry";
+import Config from '../Config';
 
 const {Header, Content, Footer} = Layout;
 
-function signUp(props){
-    return(
+function SignUp(props){
+    const [error, setError] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+  
+    async function signUp() {
+      try {
+        const user = await Config.sendRequest('/api/users', 'POST', {name, email, password});
+        if(user.error) {
+          throw new Error(user.message);
+        }
+        const userSignIn = await Config.sendRequest('/api/users/signIn', 'POST', {email, password});
+        window.location.href = '/';
+      }
+      catch(e) {
+        setError(e.message);
+      }
+    }
+  
+    return (
         <Layout className="layout" style={{display:"flex", flexFlow:"column", height:"100vh"}}>
-            <Header/>
             <Content style={{ position: 'relative' }}>
                 <div style={{background: "#fff", display:"flex", justifyContent: 'center', margin: '5%', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <Form
                             name="basic"
                             initialValues={{ remember: true }}
+                            onFinish={signUp}
                         >
+                            <Form.Item
+                              label="Name"
+                              name="name"
+                              rules={[{ required: true, message: 'Please input your first and last name!' }]}
+                            >
+                                <Input value={name} onChange={e => setName(e.target.value)}/>
+                            </Form.Item>
+                          
                             <Form.Item
                                 name="email"
                                 label="Email"
@@ -30,15 +58,7 @@ function signUp(props){
                                     },
                                 ]}
                             >
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item
-                                label="Username"
-                                name="username"
-                                rules={[{ required: true, message: 'Please input your username!' }]}
-                            >
-                                <Input />
+                                <Input value={email} onChange={e => setEmail(e.target.value)}/>
                             </Form.Item>
 
                             <Form.Item
@@ -46,7 +66,7 @@ function signUp(props){
                                 name="password"
                                 rules={[{ required: true, message: 'Please input your password!' }]}
                             >
-                                <Input.Password />
+                                <Input.Password value={password} onChange={e => setPassword(e.target.value)}/>
                             </Form.Item>
 
                             <Form.Item
@@ -71,7 +91,11 @@ function signUp(props){
                             >
                                 <Input.Password/>
                             </Form.Item>
+                          <Form.Item>
+                            <Typography.Text type="danger">{error}</Typography.Text>
+                          </Form.Item>
                             <Form.Item style={{ textAlign: 'right' }}>
+                                <Link to={"/login"} style={{ marginRight: '10px' }}>Already have an account? Sign In</Link>
                                 <Button type="primary" htmlType="submit">
                                     Submit
                                 </Button>
@@ -80,12 +104,8 @@ function signUp(props){
                     </div>
                 </div>
             </Content>
-            <Footer style={{background: "#999", textAlign:"center"}}>
-                <p>Already have an account: <Link to={"/signIn"}>Sign In</Link></p>
-                <DataEntry/>
-            </Footer>
         </Layout>
     );
 }
 
-export default signUp;
+export default SignUp;
