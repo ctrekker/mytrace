@@ -23,19 +23,6 @@ const data = [
     },
 
 ];
-const menu = (
-    <Menu>
-        <Menu.Item key="0">
-            <a>Daily</a>
-        </Menu.Item>
-        <Menu.Item key="1">
-            <a>Weekly</a>
-        </Menu.Item>
-        <Menu.Item key="2">Monthly</Menu.Item>
-        <Menu.Item key="3">Yearly</Menu.Item>
-    </Menu>
-);
-
 
 
 function Data(props) {
@@ -56,14 +43,30 @@ function Data(props) {
         setEndDate(dates[1]);
     }
 
-    console.log(startDate.format('MMM Do'), endDate.format('MMM Do'));
+    function onTimeChange(slice) {
+        return e => {
+            setStartDate(slice === 'all' ? moment(0) : moment().subtract(1, 'year'));
+        };
+    }
+
+    console.log(startDate);
+
+    const menu = (
+        <Menu>
+            <Menu.Item key="0" onClick={onTimeChange('year')}>
+                <a>This Year</a>
+            </Menu.Item>
+            <Menu.Item key="1" onClick={onTimeChange('all')}>All Time</Menu.Item>
+        </Menu>
+    );
 
     return (
         <Navigation>
             <Layout>
                 <Header>
-                    <div style={{textAlign:'right'}}>
-                        <Recommendations/>
+                    <div>
+                        <p style = {{float:'left'}}>Data Visual: select time period </p>
+                        <p style = {{float:'right'}}><Recommendations/></p>
                     </div>
                 </Header>
                 <Layout>
@@ -72,7 +75,7 @@ function Data(props) {
                             <RangePicker onChange={onRangeChange}/>
                             <Dropdown overlay={menu} trigger={['click']}>
                                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                                    Time Options <DownOutlined />
+                                    Time Selection <DownOutlined />
                                 </a>
                             </Dropdown>
                         </Space>
