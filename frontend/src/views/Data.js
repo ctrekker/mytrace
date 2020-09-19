@@ -30,11 +30,19 @@ function Data(props) {
     const [regionalData, setRegionalData] = useState(false);
     const [globalData, setGlobalData] = useState(false);
 
+    const [startDate, setStartDate] = useState(moment().subtract(1, 'month'));
+    const [endDate, setEndDate] = useState(moment());
+
     function onChange(e) {
         console.log(`checked = ${e.target.checked}`)
     }
 
-    console.log(personalData);
+    function onRangeChange(dates) {
+        setStartDate(dates[0]);
+        setEndDate(dates[1]);
+    }
+
+    console.log(startDate.format('MMM Do'), endDate.format('MMM Do'));
 
     return (
         <Navigation>
@@ -47,7 +55,7 @@ function Data(props) {
                 <Layout>
                     <Content>
                         <Space direction = "vertical" size={12}>
-                            <RangePicker />
+                            <RangePicker onChange={onRangeChange}/>
                         </Space>
                         <LineChart width={800} height={500} data={data} margin={{top:5, right:30, left:20, bottom:5}}>
                             <CartesianGrid strokeDasharray = "3 3"/>
