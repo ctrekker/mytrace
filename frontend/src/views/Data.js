@@ -1,31 +1,17 @@
-import React, {PureComponent, useState} from 'react';
-import {Layout, Menu, DatePicker, Space, Modal, Button, Checkbox} from 'antd';
+import React, { PureComponent, useEffect, useState } from 'react';
+import {Layout, Menu, DatePicker, Space, Modal, Button, Checkbox, Dropdown} from 'antd';
 
 import moment from 'moment-es6';
 
-import {Layout, Menu, DatePicker, Space, Modal, Button, Checkbox, Dropdown} from 'antd';
 import{LineChart, XAxis, YAxis, CartesianGrid, Line, Legend, Tooltip} from "recharts";
 import Navigation from "../components/Navigation";
 import Recommendations from "../components/Recommendations";
 import{DownOutlined} from '@ant-design/icons'
-
-import Recommendations from "../components/Recommendations";
+import Config from '../Config';
 
 
 const { Header, Footer, Sider, Content } = Layout;
 const{RangePicker} = DatePicker;
-const data = [
-    {
-        time: 1600284503080, personal: 4000, regional: 1000, worldwide: 2000
-    },
-    {
-        time: 1600370903080, personal: 2000, regional: 3000, worldwide: 5000
-    },
-    {
-        time: 1600457303080, personal: 3000, regional: 4000, worldwide: 7000
-    },
-
-];
 
 
 function Data(props) {
@@ -34,12 +20,36 @@ function Data(props) {
     const [globalData, setGlobalData] = useState(false);
 
 
-    const [startDate, setStartDate] = useState(moment().subtract(1, 'month'));
+    const [startDate, setStartDate] = useState(moment().subtract(1, 'year'));
     const [endDate, setEndDate] = useState(moment());
+    
+    const [graphData, setGraphData] = useState([
+        {
+            time: 1600284503080, personal: 4000, regional: 1000, worldwide: 2000
+        },
+        {
+            time: 1600370903080, personal: 2000, regional: 3000, worldwide: 5000
+        },
+        {
+            time: 1600457303080, personal: 3000, regional: 4000, worldwide: 7000
+        }
+    ]);
 
-    console.log(personalData);
-
-
+    
+    useEffect(() => {
+        Config.sendRequest(`/api/metrics/emissions?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=sum`, 'GET')
+          .then(res => {
+              setGraphData(res.map(x => ({
+                  time: moment(x.first).toDate().getTime(),
+                  personal: x.totalEmissions.toFixed(2)
+              })));
+          })
+          .catch((err) => {
+          
+          });
+    }, [startDate]);
+    
+    
     function onChange(e) {
         console.log(`checked = ${e.target.checked}`)
     }
@@ -54,8 +64,6 @@ function Data(props) {
             setStartDate(slice === 'all' ? moment(0) : moment().subtract(1, 'year'));
         };
     }
-
-    console.log(startDate);
 
     const menu = (
         <Menu>
@@ -85,7 +93,7 @@ function Data(props) {
                                 </a>
                             </Dropdown>
                         </Space>
-                        <LineChart width={800} height={500} data={data} margin={{top:5, right:30, left:20, bottom:5}}>
+                        <LineChart width={800} height={500} data={graphData} margin={{top:5, right:30, left:20, bottom:5}}>
                             <CartesianGrid strokeDasharray = "3 3"/>
                             <XAxis dataKey="time" tickFormatter={timeStr => moment(timeStr).format("MMM Do")}/>
                             <YAxis/>
@@ -105,8 +113,6 @@ function Data(props) {
                     </Sider>
                 </Layout>
             </Layout>
-
-
         </Navigation>
     )
 }

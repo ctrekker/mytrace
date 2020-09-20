@@ -7,12 +7,10 @@ import Login from "./views/Login";
 import SignUp from "./views/SignUp";
 import RequireAuth from './components/RequireAuth';
 import 'antd/dist/antd.css';
-import DataEntry from "./components/DataEntry";
 
 function App() {
   return (
       <BrowserRouter>
-
           <RequireAuth
             not={
               <Switch>
@@ -23,7 +21,7 @@ function App() {
                   <Login/>
                 </Route>
                 <Route path={'/'}>
-                  <Redirect to={'/login'}/>
+                  {/*<Redirect to={'/login'}/>*/}
                 </Route>
               </Switch>
             }
@@ -36,7 +34,7 @@ function App() {
                 <Data/>
               </Route>
               <Route path={'/'}>
-                <Redirect to={'/'}/>
+                {/*<Redirect to={'/'}/>*/}
               </Route>
             </Switch>
           </RequireAuth>
