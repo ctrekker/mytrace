@@ -18,6 +18,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false
+  },
+  locationData: {
+    type: mongoose.Schema.Types.Mixed,
+    required: false
   }
 });
 

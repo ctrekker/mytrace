@@ -4,6 +4,8 @@ const {requireAuth} = require('../security');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+const geoip = require('geoip-lite');
+
 router.get('/', requireAuth, (req, res) => {
   res.json(req.user);
 });
@@ -45,7 +47,7 @@ router.post('/signIn', async (req, res) => {
     res.status(400).send('No credentials provided');
     return;
   }
-  
+
   const email = req.body.email;
   const password = req.body.password;
   const user = await User.findOne({email}).select('+password').exec();
@@ -57,7 +59,13 @@ router.post('/signIn', async (req, res) => {
     res.status(400).send('User password is incorrect');
     return;
   }
-  
+
+  const regex = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/;
+  const remoteAddress = req.connection.remoteAddress === '::1' ? '174.16.147.3' : req.connection.remoteAddress;
+  const ip = regex.test(remoteAddress) ? remoteAddress  : '8.8.8.8';
+  user.locationData = geoip.lookup(ip);
+  await user.save();
+
   res.cookie('token', jwt.sign(user.toJSON(), process.env.JWT_SECRET));
   res.json(user);
 });
@@ -65,5 +73,8 @@ router.post('/signIn', async (req, res) => {
 router.post('/signOut', async (req, res) => {
   res.clearCookie('token').status(200).json({ message: 'Goodbye!' });
 })
+
+
+
 
 module.exports = router;
