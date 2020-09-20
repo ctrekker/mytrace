@@ -53,7 +53,7 @@ function DataEntry(props) {
 
     return (
         <>
-            <Button type="primary" shape="circle" onClick={() => setVisible(true)}>
+            <Button type="primary" shape="circle" onClick={() => setVisible(true)} style={{minHeight:"3em", minWidth:"3em", fontSize:"1.5em"}}>
                 <PlusOutlined/>
             </Button>
             <Modal title="Data Input" visible={visible} onOk={onOk} onCancel={onCancel} destroyOnClose={true}>

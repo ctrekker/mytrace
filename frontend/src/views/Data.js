@@ -8,6 +8,7 @@ import Navigation from "../components/Navigation";
 import Recommendations from "../components/Recommendations";
 import{DownOutlined} from '@ant-design/icons'
 import Config from '../Config';
+import DataEntry from "../components/DataEntry";
 
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -113,6 +114,9 @@ function Data(props) {
                     </Sider>
                 </Layout>
             </Layout>
+            <div style={{position:"fixed", bottom:"50px", right:"100px"}}>
+                <DataEntry/>
+            </div>
         </Navigation>
     )
 }
