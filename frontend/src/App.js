@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom";
 import Home from "./views/Home";
@@ -21,11 +21,11 @@ function App() {
                 <Route path={'/login'} exact>
                   <Login/>
                 </Route>
-                  <Route path={'/about'} exact>
-                      <About/>
-                  </Route>
+                <Route path={'/about'} exact>
+                    <About/>
+                </Route>
                 <Route path={'/'}>
-                  <Redirect to={'/login'}/>
+                  <Login/>
                 </Route>
               </Switch>
             }
@@ -40,9 +40,6 @@ function App() {
                 <Route path={'/about'} exact>
                     <About/>
                 </Route>
-              <Route path={'/'}>
-                <Redirect to={'/'}/>
-              </Route>
             </Switch>
           </RequireAuth>
       </BrowserRouter>

@@ -40,6 +40,8 @@ function DataEntry(props) {
                     console.log(res);
                     setVisible(false);
                     setFormVariant(null);
+                    
+                    localStorage.setItem('reloadGraph', 'true');
                 })
                 .catch(err => {
                     console.log(err);

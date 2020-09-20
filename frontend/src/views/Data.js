@@ -24,6 +24,8 @@ function Data(props) {
     const [startDate, setStartDate] = useState(moment().subtract(1, 'year'));
     const [endDate, setEndDate] = useState(moment());
     
+    const [refetch, setRefetch] = useState(true);
+    
     const [graphData, setGraphData] = useState([
         {
             time: 1600284503080, personal: 4000, regional: 1000, worldwide: 2000
@@ -38,6 +40,7 @@ function Data(props) {
 
     
     useEffect(() => {
+        console.log('updating');
         Config.sendRequest(`/api/metrics/emissions?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=sum`, 'GET')
           .then(res1 => {
               Config.sendRequest(`/api/metrics/emissions/global?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=avg&interval=month`, 'GET')
@@ -56,7 +59,35 @@ function Data(props) {
           .catch((err) => {
             console.log(err);
           });
-    }, [startDate]);
+    }, [startDate, refetch]);
+    
+    useEffect(() => {
+        setInterval(() => {
+            const graphReload = localStorage.getItem('reloadGraph');
+            console.log(graphReload);
+            if(graphReload === 'true') {
+                localStorage.setItem('reloadGraph', '');
+                Config.sendRequest(`/api/metrics/emissions?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=sum`, 'GET')
+                  .then(res1 => {
+                      Config.sendRequest(`/api/metrics/emissions/global?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=avg&interval=month`, 'GET')
+                        .then(res2 => {
+                            console.log(res2);
+                            setGraphData(res1.map((x, i) => ({
+                                time: moment(x.first).format('MMM Do'),
+                                personal: parseInt(x.totalEmissions.toFixed(0)),
+                                worldwide: parseInt((res2[i].totalEmissions / 100).toFixed(0))
+                            })));
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                  })
+                  .catch((err) => {
+                      console.log(err);
+                  });
+            }
+        }, 100);
+    }, []);
     
     console.log(graphData);
     

@@ -8,13 +8,13 @@ const {Header, Content, Footer} = Layout;
 function Navigation(props) {
   async function signOut() {
     await Config.sendRequest('/api/users/signOut', 'POST');
-    console.log('Hello there');
     window.location.reload();
   }
   
   return (
     <Layout style={{ height: '100vh' }}>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
+        <img src={'/logo.png'} alt={'logo'} style={{ width: '50px', height: '50px', marginRight: '15px' }}/>
         <Typography.Title level={2} style={{ margin: 0, paddingRight: '30px' }}>MyTrace</Typography.Title>
         <Menu mode={'horizontal'}>
             <Menu.Item key={0}>
@@ -27,11 +27,11 @@ function Navigation(props) {
                     My Data
                 </Link>
             </Menu.Item>
-            <Menu.Item key={2}>
-                <Link to={'/about'}>
-                    About
-                </Link>
-            </Menu.Item>
+            {/*<Menu.Item key={2}>*/}
+            {/*    <Link to={'/about'}>*/}
+            {/*        About*/}
+            {/*    </Link>*/}
+            {/*</Menu.Item>*/}
         </Menu>
         <div style={{ flexGrow: 1 }}/>
         <Button onClick={signOut}>Sign Out</Button>

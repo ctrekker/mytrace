@@ -72,7 +72,7 @@ function Home(props) {
                 </Col>
                 <Col span={8}>
                     <Fact title={'Personalized Fact'}>Riding your bike produces about 10 times less CO2 than driving a car.</Fact>
-                    <Fact title={'Personal Emissions'}>This should be your personal emissions</Fact>
+                    <Fact title={'Personal Emissions'}>Reducing your electricity usage by 50 kilowatt-hours will reduce your CO2 emissions by 56.5 lbs on average</Fact>
                 </Col>
                 <div style={{position:"fixed", bottom:"50px", right:"50px"}}>
                     <DataEntry style={{scale:"4"}}/>
