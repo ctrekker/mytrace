@@ -1,16 +1,13 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Navigation from '../components/Navigation';
 import { Row, Col, Typography, Divider } from 'antd';
 import {
     PieChart, Pie, Sector, Cell,
 } from 'recharts';
 import DataEntry from "../components/DataEntry";
+import Config from "../Config";
+import moment from "moment-es6";
 
-const data = [
-    { name: 'Electricity', value: 300 },
-    { name: 'Natural Gas', value: 300 },
-    { name: 'Transportation / Gas', value: 200 },
-];
 const COLORS = ['#00C49F', '#FFBB28', '#FF8042'];
 
 function Fact({ title, children }) {
@@ -23,6 +20,29 @@ function Fact({ title, children }) {
 }
 
 function Home(props) {
+    const [graphData, setGraphData] = useState([
+        { name: 'Electricity', value: 1 },
+        { name: 'Natural Gas', value: 1 },
+        { name: 'Transportation / Gas', value: 1 }
+    ]);
+
+    useEffect(() => {
+        Config.sendRequest(`/api/metrics/aggregate?endDate=${moment().toDate().getTime()}&startDate=${moment().subtract(1, 'month').toDate().getTime()}&mode=sum`, 'GET')
+            .then(res => {
+                setGraphData(res.map(x => ({
+                    name: {
+                        ELECTRIC: 'Electricity',
+                        NATURAL_GAS: 'Natural Gas',
+                        TRANSPORTATION: 'Transportation'
+                    }[x._id],
+                    value: x.total
+                })));
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, [setGraphData]);
+
     return (
         <Navigation>
             <Row>
@@ -34,7 +54,7 @@ function Home(props) {
                     <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', top: '-150px', height:"80vh"}}>
                         <PieChart width={600} height={600}>
                             <Pie
-                                data={data}
+                                data={graphData}
                                 cx={270}
                                 cy={270}
                                 outerRadius={100}
@@ -43,7 +63,7 @@ function Home(props) {
                                 label={(entry) => entry.name}
                             >
                                 {
-                                    data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+                                    graphData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
                                 }
                             </Pie>
                         </PieChart>

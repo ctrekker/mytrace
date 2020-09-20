@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout, Menu, Typography, Button } from 'antd';
 import './Navigation.css';
 import Config from '../Config';
+import {Link} from "react-router-dom";
 const {Header, Content, Footer} = Layout;
 
 function Navigation(props) {
@@ -16,9 +17,16 @@ function Navigation(props) {
       <Header style={{ display: 'flex', alignItems: 'center' }}>
         <Typography.Title level={2} style={{ margin: 0, paddingRight: '30px' }}>MyTrace</Typography.Title>
         <Menu mode={'horizontal'}>
-          <Menu.Item key={1}>Page 1</Menu.Item>
-          <Menu.Item key={2}>Page 2</Menu.Item>
-          <Menu.Item key={3}>Page 3</Menu.Item>
+            <Menu.Item key={0}>
+                <Link to={'/'}>
+                    Home
+                </Link>
+            </Menu.Item>
+          <Menu.Item key={1}>
+              <Link to={'/data'}>
+                    My Data
+                </Link>
+            </Menu.Item>
         </Menu>
         <div style={{ flexGrow: 1 }}/>
         <Button onClick={signOut}>Sign Out</Button>

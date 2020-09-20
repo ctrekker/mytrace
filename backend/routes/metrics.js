@@ -70,7 +70,7 @@ router.get('/aggregate', requireAuth, async (req, res) => {
     {
       $group: {
         _id: '$source',
-        total: {$sum: '$data'},
+        total: {$sum: '$carbonImpact'},
         first: {$min: "$metricTimestamp"},
         last: {$max: "$metricTimestamp"}
       }
@@ -84,7 +84,6 @@ router.get('/aggregate', requireAuth, async (req, res) => {
 
 
 router.get('/emissions', requireAuth, async (req, res) => {
-
   //add to req
   req.pipeline = [
     {
@@ -112,7 +111,35 @@ router.get('/emissions', requireAuth, async (req, res) => {
     }
   ];
   aggregation(req, res)
-
+});
+router.get('/emissions/global', requireAuth, async (req, res) => {
+  //add to req
+  req.pipeline = [
+    {
+      $match: {}
+    },
+    {
+      $project: {
+        carbonImpact: 1,
+        metricTimestamp: 1,
+        dateField: { $dateToString: { format: (req.query.group || '').toLowerCase() === 'year' ? '%Y' : '%Y-%m', date: '$metricTimestamp'} }
+      }
+    },
+    {
+      $group: {
+        _id: '$dateField',
+        totalEmissions: {$sum: "$carbonImpact"},
+        first: {$min: "$metricTimestamp"},
+        last: {$max: "$metricTimestamp"}
+      }
+    },
+    {
+      $sort: {
+        _id: 1
+      }
+    }
+  ];
+  aggregation(req, res)
 });
 
 async function aggregation(req, res){
