@@ -66,8 +66,12 @@ function Data(props) {
     }
 
     function onRangeChange(dates) {
-        setStartDate(dates[0]);
-        setEndDate(dates[1]);
+        if(dates !== null)
+        {
+            setStartDate(dates[0]);
+            setEndDate(dates[1]);
+        }
+
     }
 
     function onTimeChange(slice) {

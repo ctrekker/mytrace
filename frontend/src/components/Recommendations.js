@@ -37,9 +37,9 @@ class Recommendations extends React.Component{
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                 >
-                    <p>Connor should stop using so much energy.</p>
-                    <p>Nick's Airpod</p>
-                    <p>MS Paint is the Best</p>
+                    <p>Turn off your lights when you are not at home. </p>
+                    <p>Opt for biking to work once in a while!</p>
+                    <p>Be smart about air conditioning usage.</p>
                 </Modal>
             </>
         );

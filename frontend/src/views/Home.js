@@ -10,6 +10,7 @@ import moment from "moment-es6";
 
 const COLORS = ['#00C49F', '#FFBB28', '#FF8042'];
 
+
 function Fact({ title, children }) {
     return (
       <div style={{ marginBottom: '50px' }}>
@@ -47,8 +48,8 @@ function Home(props) {
         <Navigation>
             <Row>
                 <Col span={8}>
-                    <Fact title={'Global Fact'}>Our UI Design mockups were built in MS Paint!</Fact>
-                    <Fact title={'Global Emissions'}>Up by 9000%</Fact>
+                    <Fact title={'Global Fact'}>Meterologists say 2020 is on course to be the hottest year since records began.</Fact>
+                    <Fact title={'Global Emissions'}>In 2019, about 43.1 billion tons of CO2 from human activities were emitted into the atmosphere.</Fact>
                 </Col>
                 <Col span={8}>
                     <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', top: '0px' }}>
@@ -70,7 +71,7 @@ function Home(props) {
                     </div>
                 </Col>
                 <Col span={8}>
-                    <Fact title={'Personalized Fact'}>You have decreased your CO^2 emissions by <b>6%</b></Fact>
+                    <Fact title={'Personalized Fact'}>Riding your bike produces about 10 times less CO2 than driving a car.</Fact>
                     <Fact title={'Personal Emissions'}>This should be your personal emissions</Fact>
                 </Col>
                 <div style={{position:"fixed", bottom:"50px", right:"50px"}}>
