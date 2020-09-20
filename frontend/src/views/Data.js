@@ -89,7 +89,7 @@ function Data(props) {
                             <RangePicker onChange={onRangeChange}/>
                             <Dropdown overlay={menu} trigger={['click']}>
                                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                                    Time Selection <DownOutlined />
+                                    {startDate.toDate().getTime() === 0 ? 'All Time' : 'This Year'} <DownOutlined />
                                 </a>
                             </Dropdown>
                         </Space>
