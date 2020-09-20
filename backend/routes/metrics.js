@@ -70,7 +70,7 @@ router.get('/aggregate', requireAuth, async (req, res) => {
     {
       $group: {
         _id: '$source',
-        total: {$sum: '$data'},
+        total: {$sum: '$carbonImpact'},
         first: {$min: "$metricTimestamp"},
         last: {$max: "$metricTimestamp"}
       }

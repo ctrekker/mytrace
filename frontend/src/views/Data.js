@@ -37,7 +37,7 @@ function Data(props) {
 
     
     useEffect(() => {
-        Config.sendRequest(`/api/metrics/emissions?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=sum`, 'GET')
+        Config.sendRequest(`/api/metrics/aggregate?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=sum`, 'GET')
           .then(res => {
               setGraphData(res.map(x => ({
                   time: moment(x.first).toDate().getTime(),
@@ -114,7 +114,7 @@ function Data(props) {
                 </Layout>
             </Layout>
         </Navigation>
-    )
+    );
 }
 
 export default Data;
