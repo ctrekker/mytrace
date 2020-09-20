@@ -13,8 +13,8 @@ async function exec() {
   for(let i=0; i<userCount; i++) {
     const sourceDist = {
       'ELECTRIC': randomNormal(28.9, 10),
-      'NATURAL_GAS': randomNormal(18.5, 5),
-      'TRANSPORTATION': randomNormal(656 / 365, 200),
+      'NATURAL_GAS': randomNormal(0.257, 0.025),
+      'TRANSPORTATION': randomNormal(1.79726, 0.5),
     };
     
     let currentDate = moment().subtract(5, 'year');

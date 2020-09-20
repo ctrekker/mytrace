@@ -25,7 +25,7 @@ function App() {
                       <About/>
                   </Route>
                 <Route path={'/'}>
-                  {/*<Redirect to={'/login'}/>*/}
+                  <Redirect to={'/login'}/>
                 </Route>
               </Switch>
             }
@@ -41,7 +41,7 @@ function App() {
                     <About/>
                 </Route>
               <Route path={'/'}>
-                {/*<Redirect to={'/'}/>*/}
+                <Redirect to={'/'}/>
               </Route>
             </Switch>
           </RequireAuth>
