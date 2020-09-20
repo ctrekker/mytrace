@@ -51,7 +51,7 @@ function Home(props) {
                     <Fact title={'Global Emissions'}>Up by 9000%</Fact>
                 </Col>
                 <Col span={8}>
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', top: '-150px', height:"80vh"}}>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', top: '0px' }}>
                         <PieChart width={600} height={600}>
                             <Pie
                                 data={graphData}

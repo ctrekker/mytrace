@@ -9,11 +9,13 @@ function requireAuth(req, res, next) {
   jwt.verify(req.cookies['token'], process.env.JWT_SECRET, async (err, payload) => {
     if(err) {
       error(res);
+      return;
     }
 
     const user = await User.findById(payload._id);
     if(!user) {
       error(res);
+      return;
     }
     
     req.user = user;

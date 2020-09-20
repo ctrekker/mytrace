@@ -14,7 +14,7 @@ async function exec() {
     const sourceDist = {
       'ELECTRIC': randomNormal(28.9, 10),
       'NATURAL_GAS': randomNormal(18.5, 5),
-      'TRANSPORTATION': randomNormal(656, 200),
+      'TRANSPORTATION': randomNormal(656 / 365, 200),
     };
     
     let currentDate = moment().subtract(5, 'year');

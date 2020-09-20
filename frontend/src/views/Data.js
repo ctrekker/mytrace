@@ -12,7 +12,7 @@ import DataEntry from "../components/DataEntry";
 
 
 const { Header, Footer, Sider, Content } = Layout;
-const{RangePicker} = DatePicker;
+const {RangePicker} = DatePicker;
 
 
 function Data(props) {
@@ -38,17 +38,27 @@ function Data(props) {
 
     
     useEffect(() => {
-        Config.sendRequest(`/api/metrics/aggregate?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=sum`, 'GET')
-          .then(res => {
-              setGraphData(res.map(x => ({
-                  time: moment(x.first).toDate().getTime(),
-                  personal: x.totalEmissions.toFixed(2)
-              })));
+        Config.sendRequest(`/api/metrics/emissions?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=sum`, 'GET')
+          .then(res1 => {
+              Config.sendRequest(`/api/metrics/emissions/global?endDate=${moment().toDate().getTime()}&startDate=${startDate.toDate().getTime()}&mode=avg&interval=month`, 'GET')
+                .then(res2 => {
+                    console.log(res2);
+                    setGraphData(res1.map((x, i) => ({
+                        time: moment(x.first).format('MMM Do'),
+                        personal: parseInt(x.totalEmissions.toFixed(0)),
+                        worldwide: parseInt((res2[i].totalEmissions / 100).toFixed(0))
+                    })));
+                })
+                .catch(err => {
+                    console.log(err);
+                })
           })
           .catch((err) => {
-          
+            console.log(err);
           });
     }, [startDate]);
+    
+    console.log(graphData);
     
     
     function onChange(e) {
@@ -96,7 +106,7 @@ function Data(props) {
                         </Space>
                         <LineChart width={800} height={500} data={graphData} margin={{top:5, right:30, left:20, bottom:5}}>
                             <CartesianGrid strokeDasharray = "3 3"/>
-                            <XAxis dataKey="time" tickFormatter={timeStr => moment(timeStr).format("MMM Do")}/>
+                            <XAxis dataKey="time"/>
                             <YAxis/>
                             <Tooltip/>
                             <Legend/>
@@ -106,10 +116,10 @@ function Data(props) {
                         </LineChart>
                     </Content>
                     <Sider theme="light">
-                        <div style={{display: "flex", flexDirection: "column", height: '80%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Checkbox onChange={() => setPersonalData(!personalData)} checked={personalData}>Personal Data</Checkbox>
-                            <Checkbox onChange={() => setRegionalData(!regionalData)} checked={regionalData}>Regional Data</Checkbox>
-                            <Checkbox onChange={() => setGlobalData(!globalData)} checked={globalData}>Global Data</Checkbox>
+                        <div style={{display: "flex", flexDirection: "column", alignItems: 'left', justifyContent: 'left', position: 'relative', left: '20px', top: '20px' }}>
+                            <Checkbox style={{ marginLeft: 0 }} onChange={() => setPersonalData(!personalData)} checked={personalData}>Personal Data</Checkbox>
+                            <Checkbox style={{ marginLeft: 0 }} onChange={() => setRegionalData(!regionalData)} checked={regionalData}>Regional Data</Checkbox>
+                            <Checkbox style={{ marginLeft: 0 }} onChange={() => setGlobalData(!globalData)} checked={globalData}>Global Data</Checkbox>
                         </div>
                     </Sider>
                 </Layout>
