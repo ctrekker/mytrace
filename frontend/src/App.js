@@ -5,6 +5,7 @@ import Home from "./views/Home";
 import Data from "./views/Data";
 import Login from "./views/Login";
 import SignUp from "./views/SignUp";
+import About from "./views/About";
 import RequireAuth from './components/RequireAuth';
 import 'antd/dist/antd.css';
 
@@ -20,6 +21,9 @@ function App() {
                 <Route path={'/login'} exact>
                   <Login/>
                 </Route>
+                  <Route path={'/about'} exact>
+                      <About/>
+                  </Route>
                 <Route path={'/'}>
                   {/*<Redirect to={'/login'}/>*/}
                 </Route>
@@ -33,6 +37,9 @@ function App() {
               <Route path={'/data'} exact>
                 <Data/>
               </Route>
+                <Route path={'/about'} exact>
+                    <About/>
+                </Route>
               <Route path={'/'}>
                 {/*<Redirect to={'/'}/>*/}
               </Route>

@@ -27,6 +27,11 @@ function Navigation(props) {
                     My Data
                 </Link>
             </Menu.Item>
+            <Menu.Item key={2}>
+                <Link to={'/about'}>
+                    About
+                </Link>
+            </Menu.Item>
         </Menu>
         <div style={{ flexGrow: 1 }}/>
         <Button onClick={signOut}>Sign Out</Button>
