@@ -52,7 +52,7 @@ function Home(props) {
                     <Fact title={'Global Emissions'}>In 2019, about 43.1 billion tons of CO2 from human activities were emitted into the atmosphere.</Fact>
                 </Col>
                 <Col span={8}>
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', top: '0px' }}>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', top: '-75px', height: '80vh' }}>
                         <PieChart width={600} height={600}>
                             <Pie
                                 data={graphData}
